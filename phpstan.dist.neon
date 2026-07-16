@@ -3,8 +3,8 @@ parameters:
   level: 0
   paths:
     - Deliverance
-  editorUrl: '%%file%%:%%line%%'
-  editorUrlTitle: '%%file%%:%%line%%'
+  editorUrl: '%%relfile%%:%%line%%'
+  editorUrlTitle: '%%relfile%%:%%line%%'
   errorFormat: table
   # @todo: these are known errors that will require some time to fix
   ignoreErrors:
