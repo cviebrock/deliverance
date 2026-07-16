@@ -11,8 +11,7 @@ use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/Admin',
-        __DIR__ . '/po',
+        __DIR__ . '/Deliverance',
     ])
     // uncomment to reach your current PHP version
     ->withPhpSets(php82: true)
