@@ -399,14 +399,10 @@ class DeliveranceMailChimpList extends DeliveranceList
             } catch (DeliveranceMailChimpClientException $e) {
                 // gracefully handle exceptions that we can provide nice
                 // feedback about.
-                switch ($e->getCode()) {
-                    case 404:
-                        $result = DeliveranceList::NOT_FOUND;
-                        break;
-
-                    default:
-                        throw $e;
-                }
+                $result = match ($e->getCode()) {
+                    404     => DeliveranceList::NOT_FOUND,
+                    default => throw $e,
+                };
             } catch (Exception $e) {
                 throw new DeliveranceException($e);
             }
@@ -640,57 +636,36 @@ class DeliveranceMailChimpList extends DeliveranceList
 
     private function callClientMethod($verb, $method, array $args = [])
     {
-        switch ($verb) {
-            case 'DELETE':
-                $result = $this->client->delete(
-                    $method,
-                    $args,
-                    $this->client_timeout
-                );
-
-                break;
-
-            case 'GET':
-                $result = $this->client->get(
-                    $method,
-                    $args,
-                    $this->client_timeout
-                );
-
-                break;
-
-            case 'PATCH':
-                $result = $this->client->patch(
-                    $method,
-                    $args,
-                    $this->client_timeout
-                );
-
-                break;
-
-            case 'POST':
-                $result = $this->client->post(
-                    $method,
-                    $args,
-                    $this->client_timeout
-                );
-
-                break;
-
-            case 'PUT':
-                $result = $this->client->put(
-                    $method,
-                    $args,
-                    $this->client_timeout
-                );
-
-                break;
-
-            default:
-                throw new DeliveranceException(
-                    sprintf('Unknown HTTP verb ‘%s’ used.', $verb)
-                );
-        }
+        $result = match ($verb) {
+            'DELETE' => $this->client->delete(
+                $method,
+                $args,
+                $this->client_timeout
+            ),
+            'GET' => $this->client->get(
+                $method,
+                $args,
+                $this->client_timeout
+            ),
+            'PATCH' => $this->client->patch(
+                $method,
+                $args,
+                $this->client_timeout
+            ),
+            'POST' => $this->client->post(
+                $method,
+                $args,
+                $this->client_timeout
+            ),
+            'PUT' => $this->client->put(
+                $method,
+                $args,
+                $this->client_timeout
+            ),
+            default => throw new DeliveranceException(
+                sprintf('Unknown HTTP verb ‘%s’ used.', $verb)
+            ),
+        };
 
         $this->handleClientErrors();
 
